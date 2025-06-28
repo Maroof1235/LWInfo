@@ -21,7 +21,7 @@ bool DiscSpaceInfo(struct DiscInfo *discinfo, uint64_t *GB, uint64_t *TB)
 	// calculations
 	*GB = discinfo->TotalBytes.QuadPart / BytesToGB;
 	
-	// extract the gigabyte amounts to 2 decimal places
+	// present storage in terms of TB and GB; need to extract number of GBs in 2 decimal places
 	*GB %= 1000;
 	*GB /= 10;
 
