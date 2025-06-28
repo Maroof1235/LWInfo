@@ -15,9 +15,6 @@ CPU - temperature, different cores maybe, */
 // personal header includes
 #include "disc.h"
 
-
-
-
 int main(void)
 {
 	struct DiscInfo discinfo = { 0 };
@@ -28,8 +25,6 @@ int main(void)
 	{
 		printf("Total size on disk (D:): %llu.%llu TB\n", Terabyte, GBTotal);
 		printf("Total free space (D:): %llu GB\n", discinfo.TotalFreeBytes.QuadPart);
-		printf("Heloo\n");
-
 	}
 
 }

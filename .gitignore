@@ -1,0 +1,9 @@
+# ignore vs files
+*.sln
+*.vcxproj
+*.vcxproj.*
+
+# ignore build
+/x64/
+/.vs/
+/lwinfo/
