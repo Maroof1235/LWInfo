@@ -5,6 +5,12 @@
 struct DiscInfo {
 	ULARGE_INTEGER TotalBytes;
 	ULARGE_INTEGER TotalFreeBytes;
+	float PercentageSpaceUse;
+	uint64_t GBTotal;
+	uint64_t TBTotal;
+	uint64_t StoreGB;
+	uint64_t InUseSpaceGB;
 };
 
-bool DiscSpaceInfo(struct DiscInfo *discinfo, uint64_t *GB, uint64_t *TB);
+bool DiscSpaceInfo(struct DiscInfo* discinfo, const char* drive);
+

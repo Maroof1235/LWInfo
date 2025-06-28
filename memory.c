@@ -7,7 +7,9 @@
 #include <stdio.h>
 #include <stdint.h>
 
-bool MemoryInfo(uint64_t *GBPhys, uint64_t *AvailGBPhys, uint64_t *MBPhys, uint64_t *AvailMBPhys, uint64_t *RemainingGB, uint64_t *RemainingMB, uint32_t *Percentage)
+#include "memory.h"
+
+bool MemoryInfo(struct MemInfo* meminfo)
 {
 	MEMORYSTATUSEX MemStatus;
 
@@ -19,23 +21,24 @@ bool MemoryInfo(uint64_t *GBPhys, uint64_t *AvailGBPhys, uint64_t *MBPhys, uint6
 	uint64_t BytesToGB = 1024 * 1024 * 1024;
 	uint64_t BytesToMB = 1024 * 1024;
 
-	*GBPhys = (MemStatus.ullTotalPhys) / BytesToGB;
-	*MBPhys = MemStatus.ullTotalPhys / BytesToMB;
+	meminfo->GBPhys = (MemStatus.ullTotalPhys) / BytesToGB;
+	meminfo->MBPhys = MemStatus.ullTotalPhys / BytesToMB;
 
-	*MBPhys %= 1000;
-	*MBPhys /= 10;
+	meminfo->MBPhys %= 1000;
+	meminfo->MBPhys /= 10;
 
-	*AvailGBPhys = MemStatus.ullAvailPhys/ BytesToGB;
-	*AvailMBPhys = (MemStatus.ullAvailPhys) / BytesToMB;
+	meminfo->AvailGBPhys = MemStatus.ullAvailPhys/ BytesToGB;
+	meminfo->AvailMBPhys = (MemStatus.ullAvailPhys) / BytesToMB;
 
-	*AvailMBPhys %= 1000;
-	*AvailMBPhys /= 10;
+	meminfo->AvailMBPhys %= 1000;
+	meminfo->AvailMBPhys /= 10;
 
-	*RemainingGB = *GBPhys - *AvailGBPhys;
-	*RemainingMB = *MBPhys - *AvailMBPhys;
+	meminfo->RemainingGB = meminfo->GBPhys - meminfo->AvailGBPhys;
+	meminfo->RemainingMB = meminfo->MBPhys - meminfo->AvailMBPhys;
 
-	*Percentage = MemStatus.dwMemoryLoad;
+	meminfo->PercentageMemUse = MemStatus.dwMemoryLoad;
 
 	//TODO: Min, Max variables to hold memory
+
 	return GlobalMemoryStatusEx != 0;
 }

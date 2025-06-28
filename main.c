@@ -2,6 +2,8 @@
 info program that displays CPU information and RAM, disk management
 CPU - temperature, different cores maybe, */
 
+// TODO: GUI windows. First sort out functionality
+
 // all errors enabled, so do this to minimise window error warnings that I cannot control
 #pragma warning(push, 0)
 #pragma warning (disable : 4668)
@@ -20,37 +22,53 @@ CPU - temperature, different cores maybe, */
 
 int main(void)
 {
+	struct MemInfo meminfo = { 0 };
 	struct DiscInfo discinfo = { 0 };
 
-	uint64_t GBTotal;
-	uint64_t Terabyte;
-
-	uint64_t TotalGBPhysAmount;
-	uint64_t TotalMBPhysAmount;
-	uint64_t AvailGBPhysAmount;
-	uint64_t AvailMBPhysAmount;
-	uint64_t RemainingGB;
-	uint64_t RemainingMB;
-	uint32_t PercentageMemUse;
-
+	// TODO: need to include escaping the program, for now force close to end program
 	while (true)
 	{
-		if (MemoryInfo(&TotalGBPhysAmount, &AvailGBPhysAmount, &TotalMBPhysAmount, &AvailMBPhysAmount, &RemainingGB, &RemainingMB, &PercentageMemUse))
+		if (MemoryInfo(&meminfo))
 		{
-			printf("Percentage of memory in use: %d%%\n", PercentageMemUse);
-			printf("Total physical memory: %llu.%llu GB\n", TotalGBPhysAmount, TotalMBPhysAmount);
-			printf("Available memory: %llu.%llu GB\n", AvailGBPhysAmount, AvailMBPhysAmount);
-			printf("Memory in use %llu.%llu GB\n", RemainingGB, RemainingMB);
+			printf("Percentage of memory in use: %d%%\n", meminfo.PercentageMemUse);
+			printf("Total physical memory: %llu.%llu GB\n", meminfo.GBPhys, meminfo.MBPhys);
+			printf("Available memory: %llu.%llu GB\n", meminfo.AvailGBPhys, meminfo.AvailMBPhys);
+			printf("Memory in use %llu.%.2llu GB\n", meminfo.RemainingGB, meminfo.RemainingMB);
 			printf("\n");
 		
 		}
 
-		if (DiscSpaceInfo(&discinfo, &GBTotal, &Terabyte))
+		if (DiscSpaceInfo(&discinfo, "C:\\"))
 		{
-			printf("Total size on disk (D:): %llu.%llu TB\n", Terabyte, GBTotal);
-			printf("Total free space (D:): %llu GB\n", discinfo.TotalFreeBytes.QuadPart);
+			printf("Total size on disk (C:): %llu.%llu TB\n", discinfo.TBTotal, discinfo.GBTotal);
+			printf("Total free space (C:): %llu GB\n", discinfo.TotalFreeBytes.QuadPart);
+			printf("Space in use (C:): %llu GB\n", discinfo.InUseSpaceGB);
+			
+			discinfo.PercentageSpaceUse = ((float) discinfo.InUseSpaceGB / discinfo.StoreGB) * 100;
+			printf("Percentage of storage in use (C:): %.2f%%\n", discinfo.PercentageSpaceUse);
+		}
+		else
+		{
+			printf("Failed to retrieve C: drive info\n");
 		}
 
+		printf("\n");
+
+		if (DiscSpaceInfo(&discinfo, "D:\\"))
+		{
+			printf("Total size on disk (D:): %llu.%llu TB\n", discinfo.TBTotal, discinfo.GBTotal);
+			printf("Total free space (D:): %llu GB\n", discinfo.TotalFreeBytes.QuadPart);
+			printf("Space in use (D:): %llu GB\n", discinfo.InUseSpaceGB);
+
+			discinfo.PercentageSpaceUse = ((float)discinfo.InUseSpaceGB / discinfo.StoreGB) * 100;
+			printf("Percentage of storage in use (D:): %.2f%%\n", discinfo.PercentageSpaceUse);
+		}
+		else
+		{
+			printf("Failed to retrieve D: drive info\n");
+		}
+
+		// to update the data
 		Sleep(1500);
 		system("cls");
 
