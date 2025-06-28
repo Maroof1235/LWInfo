@@ -11,12 +11,7 @@
 
 bool DiscSpaceInfo(struct DiscInfo *discinfo, uint64_t *GB, uint64_t *TB)
 {
-
 	// call function to retreive disk space information
-	//discinfo->TotalBytes.QuadPart = 0;
-	//discinfo->TotalFreeBytes.QuadPart = 0;
-
-
 	bool DiscResult = GetDiskFreeSpaceExA(0, 0, &discinfo->TotalBytes, &discinfo->TotalFreeBytes);
 
 	// declare variable to hold the calculation to convert bytes to gibabytes
@@ -26,22 +21,14 @@ bool DiscSpaceInfo(struct DiscInfo *discinfo, uint64_t *GB, uint64_t *TB)
 	// calculations
 	*GB = discinfo->TotalBytes.QuadPart / BytesToGB;
 	
-	// truncate last 3 digits
-	*GB = *GB % 1000;
+	// extract the gigabyte amounts to 2 decimal places
+	*GB %= 1000;
+	*GB /= 10;
 
 	*TB = discinfo->TotalBytes.QuadPart / (BytesToGB * 1024);
 
 	// retrieves free space in GB
-	discinfo->TotalFreeBytes.QuadPart = discinfo->TotalFreeBytes.QuadPart / BytesToGB;
+	discinfo->TotalFreeBytes.QuadPart /= BytesToGB;
 
-	if (DiscResult != 0)
-	{
-		return true;
-
-	}
-	else
-	{
-		return false;
-	}
-
+	return DiscResult != 0;	
 }
