@@ -7,6 +7,7 @@ struct MemInfo {
 	uint64_t AvailMBPhys;
 	uint64_t RemainingGB;
 	uint64_t RemainingMB;
+	// need uint32 for this I think
 	uint32_t PercentageMemUse;
 };
 

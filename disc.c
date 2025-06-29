@@ -16,7 +16,7 @@ bool DiscSpaceInfo(struct DiscInfo *discinfo, const char* drive)
 
 
 	// declare variable to hold the calculation to convert bytes to gibabytes
-	uint64_t BytesToGB = 1024 * 1024 * 1024;
+	uint64_t BytesToGB = 1024 * 1024 * 1024; 
 
 	// QuadPart that holds the actual 64 bit integer. Need to do this for maths operations
 	// calculations

@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "memory.h"
+#include "memoryinfo.h"
 
 bool MemoryInfo(struct MemInfo* meminfo)
 {
@@ -37,8 +37,6 @@ bool MemoryInfo(struct MemInfo* meminfo)
 	meminfo->RemainingMB = meminfo->MBPhys - meminfo->AvailMBPhys;
 
 	meminfo->PercentageMemUse = MemStatus.dwMemoryLoad;
-
-	//TODO: Min, Max variables to hold memory
 
 	return GlobalMemoryStatusEx != 0;
 }
