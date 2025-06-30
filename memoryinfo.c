@@ -45,5 +45,5 @@ bool MemoryInfo(struct MemInfo* meminfo)
 	meminfo->TotalPhysRAM /= (KBToGB);
 	
 
-	return GlobalMemoryStatusEx != 0;
+	return GlobalMemoryStatusEx != 0 && GetPhysicallyInstalledSystemMemory != 0;
 }

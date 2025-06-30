@@ -39,7 +39,7 @@ int main(void)
 		printf("\n");
 		DisplayDiscInfo();
 
-		// to update the data
+		//// to update the data
 		Sleep(1500);
 		system("cls");
 
@@ -51,7 +51,9 @@ void DisplayCPUInfo(void)
 
 	SYSTEM_INFO SysInfo;
 
-	GetCpuInfo(&SysInfo);
+	struct CPUTime CpuTime;
+
+	GetCpuInfo(&SysInfo, &CpuTime);
 
 	printf("Page size: %lu Bytes\n", SysInfo.dwPageSize);
 	printf("Minimum virtual application address: 0x%p\n", SysInfo.lpMinimumApplicationAddress);
@@ -92,7 +94,7 @@ void DisplayCPUInfo(void)
 		break;
 
 	}
-	/*printf("Processor Type: %lu\n", SysInfo.dwProcessorType);*/
+
 	printf("How many processors active using mask (ffff = 16): %llx\n", SysInfo.dwActiveProcessorMask);
 
 }
