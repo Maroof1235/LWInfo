@@ -11,7 +11,8 @@
 
 bool MemoryInfo(struct MemInfo* meminfo)
 {
-	MEMORYSTATUSEX MemStatus;
+	
+	MEMORYSTATUSEX MemStatus; 
 
 	MemStatus.dwLength = sizeof(MemStatus);
 
@@ -20,6 +21,7 @@ bool MemoryInfo(struct MemInfo* meminfo)
 	// conversions
 	uint64_t BytesToGB = 1024 * 1024 * 1024;
 	uint64_t BytesToMB = 1024 * 1024;
+	uint64_t KBToGB = 1024 * 1024;
 
 	meminfo->GBPhys = (MemStatus.ullTotalPhys) / BytesToGB;
 	meminfo->MBPhys = MemStatus.ullTotalPhys / BytesToMB;
@@ -37,6 +39,11 @@ bool MemoryInfo(struct MemInfo* meminfo)
 	meminfo->RemainingMB = meminfo->MBPhys - meminfo->AvailMBPhys;
 
 	meminfo->PercentageMemUse = MemStatus.dwMemoryLoad;
+
+	GetPhysicallyInstalledSystemMemory(&meminfo->TotalPhysRAM);
+
+	meminfo->TotalPhysRAM /= (KBToGB);
+	
 
 	return GlobalMemoryStatusEx != 0;
 }
