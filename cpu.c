@@ -16,7 +16,7 @@ bool GetCpuInfo(struct SYSTEM_INFO* SysInfo, struct CPUTime* CpuTime)
 
 	GetSystemInfo(SysInfo);
 
-	ULONGLONG IdleDiff, KernelDiff, UserDiff, Total;
+	/* ULONGLONG IdleDiff, KernelDiff, UserDiff, Total;
 
 	FILETIME IdleTime, KernelTime, UserTime;
 
@@ -55,7 +55,7 @@ bool GetCpuInfo(struct SYSTEM_INFO* SysInfo, struct CPUTime* CpuTime)
 
 	CpuUsage = (double)(Total - IdleDiff) / Total * 100;
 
-	printf("CPU USAGE: %.f%%\n", CpuUsage);
+	printf("CPU USAGE: %.f%%\n", CpuUsage); */
 	
 	return true;
 }

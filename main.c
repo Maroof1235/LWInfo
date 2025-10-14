@@ -20,30 +20,58 @@ CPU - temperature, different cores maybe, */
 #include "disc.h"
 #include "memoryinfo.h"
 #include "cpu.h"
+#include "_sdl.h"
 
 void DisplayCPUInfo(void);
 void DisplayMemoryInfo(void);
 void DisplayDiscInfo(void);
 
-int main(void)
-{
+// sdl prototypes and variables
+
+int main(int argc, char* argv[])
+{	
 	// display all information here
 
 	// TODO: need to include escaping the program, for now force close to end program
-	while (true)
-	{
-		// CPU INFO GOES HERE
-		DisplayCPUInfo();
-		printf("\n");
-		DisplayMemoryInfo();
-		printf("\n");
-		DisplayDiscInfo();
 
-		//// to update the data
-		Sleep(1500);
-		system("cls");
+	struct App* a = malloc(sizeof(struct App));
+	memset(a, 0, sizeof(struct App));
 
+	if (!SDLInit(a)) {
+		AppFree(&a);
+		return 1;
 	}
+
+	if (!SDLLoad(a)) {
+		AppFree(&a);
+		return 1;
+	}
+
+	a->is_running = true;
+
+	SDLRun(a);
+
+	AppFree(&a);
+	return 0;
+
+	//while (true)
+	//{
+	//	// CPU INFO GOES HERE
+	//	DisplayCPUInfo();
+	//	printf("\n");
+	//	DisplayMemoryInfo();
+	//	printf("\n");
+	//	DisplayDiscInfo();
+
+	//	//// to update the data
+	//	Sleep(1500);
+	//	system("cls");
+
+
+	//}
+
+	//return 0;
+
 }
 
 void DisplayCPUInfo(void)
@@ -106,7 +134,6 @@ void DisplayMemoryInfo(void)
 
 	if (MemoryInfo(&meminfo))
 	{
-
 		printf("INSTALLED PHYSICAL RAM: %llu GB\n", meminfo.TotalPhysRAM);
 		printf("Percentage of memory in use: %d%%\n", meminfo.PercentageMemUse);
 		printf("Total physical memory: %llu.%llu GB\n", meminfo.GBPhys, meminfo.MBPhys);
