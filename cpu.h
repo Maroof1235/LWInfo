@@ -8,6 +8,8 @@ struct CPUTime {
 	ULARGE_INTEGER PrevIdle;
 	ULARGE_INTEGER PrevKernel;
 	ULARGE_INTEGER PrevUser;
+
+	double CpuUsage;
 };
 
 bool GetCpuInfo(struct SYSTEM_INFO* SysInfo, struct CPUTime* CpuTime);

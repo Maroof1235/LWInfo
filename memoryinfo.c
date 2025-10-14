@@ -34,9 +34,10 @@ bool MemoryInfo(struct MemInfo* meminfo)
 
 	meminfo->AvailMBPhys %= 1000;
 	meminfo->AvailMBPhys /= 10;
-
-	meminfo->RemainingGB = meminfo->GBPhys - meminfo->AvailGBPhys;
-	meminfo->RemainingMB = meminfo->MBPhys - meminfo->AvailMBPhys;
+	
+	uint64_t InUseBytes = MemStatus.ullTotalPhys - MemStatus.ullAvailPhys;
+	meminfo->RemainingGB = InUseBytes / BytesToGB;
+	meminfo->RemainingMB = (InUseBytes / BytesToMB) % 1000 / 10;
 
 	meminfo->PercentageMemUse = MemStatus.dwMemoryLoad;
 

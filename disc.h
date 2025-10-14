@@ -5,7 +5,8 @@
 struct DiscInfo {
 	ULARGE_INTEGER TotalBytes;
 	ULARGE_INTEGER TotalFreeBytes;
-	float PercentageSpaceUse;
+	float CPercentageSpaceUse;
+	float DPercentageSpaceUse;
 	uint64_t GBTotal;
 	uint64_t TBTotal;
 	uint64_t StoreGB;

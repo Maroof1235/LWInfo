@@ -16,7 +16,8 @@ bool GetCpuInfo(struct SYSTEM_INFO* SysInfo, struct CPUTime* CpuTime)
 
 	GetSystemInfo(SysInfo);
 
-	/* ULONGLONG IdleDiff, KernelDiff, UserDiff, Total;
+	// CPU USAGE
+	ULONGLONG IdleDiff, KernelDiff, UserDiff, Total;
 
 	FILETIME IdleTime, KernelTime, UserTime;
 
@@ -33,8 +34,10 @@ bool GetCpuInfo(struct SYSTEM_INFO* SysInfo, struct CPUTime* CpuTime)
 	CpuTime->PrevUser.LowPart = UserTime.dwLowDateTime;
 	CpuTime->PrevUser.HighPart = UserTime.dwHighDateTime;
 
+	CpuTime->PrevIdle = CpuTime->Idle;
+	CpuTime->PrevKernel = CpuTime->Kernel;
+	CpuTime->PrevUser = CpuTime->User;
 
-	Sleep(1000);
 	GetSystemTimes(&IdleTime, &KernelTime, &UserTime);
 
 	CpuTime->Idle.LowPart = IdleTime.dwLowDateTime;
@@ -51,11 +54,12 @@ bool GetCpuInfo(struct SYSTEM_INFO* SysInfo, struct CPUTime* CpuTime)
 	UserDiff = CpuTime->User.QuadPart - CpuTime->PrevUser.QuadPart;
 
 	Total = (UserDiff + KernelDiff);
-	double CpuUsage;
 
-	CpuUsage = (double)(Total - IdleDiff) / Total * 100;
-
-	printf("CPU USAGE: %.f%%\n", CpuUsage); */
-	
+	if (Total > 0) {
+		CpuTime->CpuUsage = (double)(Total - IdleDiff) / Total * 100;
+	} 
+	else {
+		CpuTime->CpuUsage = 0.0;
+	}
 	return true;
 }
