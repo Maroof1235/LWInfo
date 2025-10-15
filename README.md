@@ -8,6 +8,11 @@ Lightweight Info is a program that displays computer information such as disk sp
 This uses the Win32 API for the data and SDL for the GUI
 
 ![lwinfogithub](https://github.com/user-attachments/assets/15439ce7-511b-4db7-bfa3-03b45c4f6ff5)
+![lwinfogithub](https://github.com/user-attachments/assets/e9ecb0c7-c70d-4639-9130-95ee6c1be2bc)
 
 Metrics update in real-time
+
+
+
+
 
