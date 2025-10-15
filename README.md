@@ -1,6 +1,6 @@
 Lightweight Info is a program that displays computer information such as disk space, memory and info on the CPU. 
 
-<img width="256" height="256" alt="lwinfo" src="https://github.com/user-attachments/assets/597ea915-fba6-416a-9323-1012afc0ced1" 
+![alt text](<img width="256" height="256" alt="lwinfo" src="https://github.com/user-attachments/assets/597ea915-fba6-416a-9323-1012afc0ced1") 
   
 This uses the Win32 API for the data and SDL for the GUI
 
