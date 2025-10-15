@@ -26,12 +26,12 @@
 bool SDLInit(struct App* a)
 {
 	if (!TTF_Init()) {
-		fprintf(stderr, "Error initialising SDL3: %s\n", SDL_GetError());
+		fprintf(stderr, "Error initialising SDL3_ttf: %s\n", SDL_GetError());
 		return false;
 	}
 
 	if (!SDL_Init(SDL_FLAGS)) {
-		fprintf(stderr, "Error initialising SDL3_ttf: %s\n", SDL_GetError());
+		fprintf(stderr, "Error initialising SDL3: %s\n", SDL_GetError());
 		return false;
 	}
 
@@ -104,8 +104,12 @@ bool SDLLoad(struct App* a)
 
 	//SYSTEM_INFO SysInfo;
 
+	a->hasCDrive = false;
+	a->hasDDrive = false;
+
 	a->cpuinfo = malloc(sizeof(struct CPUTime));
 	memset(a->cpuinfo, 0, sizeof(struct CPUTime));
+	a->cpuinfo->IsFirstRun = true;
 	GetCpuInfo(&a->sysinfo, a->cpuinfo);
 
 	a->text_font = TTF_OpenFont("fonts/8bitOperatorPlus-Regular.ttf", TEXT_SIZE);
@@ -148,7 +152,7 @@ bool SDLLoad(struct App* a)
 		fprintf(stderr, "Error rendering text to surface: %s\n", SDL_GetError());
 		return false;
 	}
-	a->CDiscInfoTextRect.x = 250.0f;
+	a->CDiscInfoTextRect.x = 525.0f;
 	a->CDiscInfoTextRect.y = 0.0f;
 	a->CDiscInfoTextRect.w = (float)surf->w;
 	a->CDiscInfoTextRect.h = (float)surf->h;
@@ -166,7 +170,7 @@ bool SDLLoad(struct App* a)
 		fprintf(stderr, "Error rendering text to surface: %s\n", SDL_GetError());
 		return false;
 	}
-	a->DDiscInfoTextRect.x = 525.0f;
+	a->DDiscInfoTextRect.x = 800.0f;
 	a->DDiscInfoTextRect.y = 0.0f;
 	a->DDiscInfoTextRect.w = (float)surf->w;
 	a->DDiscInfoTextRect.h = (float)surf->h;
@@ -183,7 +187,7 @@ bool SDLLoad(struct App* a)
 		fprintf(stderr, "Error rendering text to surface: %s\n", SDL_GetError());
 		return false;
 	}
-	a->CpuInfoTextRect.x = 800.0f;
+	a->CpuInfoTextRect.x = 250.0f;
 	a->CpuInfoTextRect.y = 0.0f;
 	a->CpuInfoTextRect.w = (float)surf->w;
 	a->CpuInfoTextRect.h = (float)surf->h;
@@ -292,6 +296,8 @@ bool SDLLoad(struct App* a)
 	// C: drive info
 	if (DiscSpaceInfo(&discinfo, "C:\\"))
 	{
+		a->hasCDrive = true;
+
 		// total disc space
 		snprintf(text_buffer, sizeof(text_buffer), "Total disc size: %llu.%llu TB", discinfo.TBTotal, discinfo.GBTotal);
 		surf = TTF_RenderText_Blended(a->text_font, text_buffer, 0, TEXT_COLOUR);
@@ -299,7 +305,7 @@ bool SDLLoad(struct App* a)
 			fprintf(stderr, "Error rendering text to surface: %s", SDL_GetError());
 			return false;
 		}
-		a->CTotalSpaceTextRect.x = 250.0f;
+		a->CTotalSpaceTextRect.x = 525.0f;
 		a->CTotalSpaceTextRect.y = 30.0f;
 		a->CTotalSpaceTextRect.w = (float)surf->w;
 		a->CTotalSpaceTextRect.h = (float)surf->h;
@@ -317,7 +323,7 @@ bool SDLLoad(struct App* a)
 			fprintf(stderr, "Error rendering text to surface: %s", SDL_GetError());
 			return false;
 		}
-		a->CFreeSpaceTextRect.x = 250.0f;
+		a->CFreeSpaceTextRect.x = 525.0f;
 		a->CFreeSpaceTextRect.y = 60.0f;
 		a->CFreeSpaceTextRect.w = (float)surf->w;
 		a->CFreeSpaceTextRect.h = (float)surf->h;
@@ -335,7 +341,7 @@ bool SDLLoad(struct App* a)
 			fprintf(stderr, "Error rendering text to surface: %s\n", SDL_GetError());
 			return false;
 		}
-		a->CSpaceInUseTextRect.x = 250.0f;
+		a->CSpaceInUseTextRect.x = 525.0f;
 		a->CSpaceInUseTextRect.y = 90.0f;
 		a->CSpaceInUseTextRect.w = (float)surf->w;
 		a->CSpaceInUseTextRect.h = (float)surf->h;
@@ -354,7 +360,7 @@ bool SDLLoad(struct App* a)
 			fprintf(stderr, "Error rendering text to surface: %s\n", SDL_GetError());
 			return false;
 		}
-		a->CPercentSpaceTextRect.x = 250.0f;
+		a->CPercentSpaceTextRect.x = 525.0f;
 		a->CPercentSpaceTextRect.y = 120.0f;
 		a->CPercentSpaceTextRect.w = (float)surf->w;
 		a->CPercentSpaceTextRect.h = (float)surf->h;
@@ -373,6 +379,8 @@ bool SDLLoad(struct App* a)
 	// D: drive info
 	if (DiscSpaceInfo(&discinfo, "D:\\"))
 	{
+		a->hasDDrive = true;
+
 		// total disc space
 		snprintf(text_buffer, sizeof(text_buffer), "Total disc size: %llu.%llu TB", discinfo.TBTotal, discinfo.GBTotal);
 		surf = TTF_RenderText_Blended(a->text_font, text_buffer, 0, TEXT_COLOUR);
@@ -380,7 +388,7 @@ bool SDLLoad(struct App* a)
 			fprintf(stderr, "Error rendering text to surface: %s", SDL_GetError());
 			return false;
 		}
-		a->DTotalSpaceTextRect.x = 525.0f;
+		a->DTotalSpaceTextRect.x = 800.0f;
 		a->DTotalSpaceTextRect.y = 30.0f;
 		a->DTotalSpaceTextRect.w = (float)surf->w;
 		a->DTotalSpaceTextRect.h = (float)surf->h;
@@ -398,7 +406,7 @@ bool SDLLoad(struct App* a)
 			fprintf(stderr, "Error rendering text to surface: %s", SDL_GetError());
 			return false;
 		}
-		a->DFreeSpaceTextRect.x = 525.0f;
+		a->DFreeSpaceTextRect.x = 800.0f;
 		a->DFreeSpaceTextRect.y = 60.0f;
 		a->DFreeSpaceTextRect.w = (float)surf->w;
 		a->DFreeSpaceTextRect.h = (float)surf->h;
@@ -416,7 +424,7 @@ bool SDLLoad(struct App* a)
 			fprintf(stderr, "Error rendering text to surface: %s\n", SDL_GetError());
 			return false;
 		}
-		a->DSpaceInUseTextRect.x = 525.0f;
+		a->DSpaceInUseTextRect.x = 800.0f;
 		a->DSpaceInUseTextRect.y = 90.0f;
 		a->DSpaceInUseTextRect.w = (float)surf->w;
 		a->DSpaceInUseTextRect.h = (float)surf->h;
@@ -435,7 +443,7 @@ bool SDLLoad(struct App* a)
 			fprintf(stderr, "Error rendering text to surface: %s\n", SDL_GetError());
 			return false;
 		}
-		a->DPercentSpaceTextRect.x = 525.0f;
+		a->DPercentSpaceTextRect.x = 800.0f;
 		a->DPercentSpaceTextRect.y = 120.0f;
 		a->DPercentSpaceTextRect.w = (float)surf->w;
 		a->DPercentSpaceTextRect.h = (float)surf->h;
@@ -460,7 +468,7 @@ bool SDLLoad(struct App* a)
 		fprintf(stderr, "Error rendering text to surface: %s\n", SDL_GetError());
 		return false;
 	}
-	a->CpuUsageTextRect.x = 800.0f;
+	a->CpuUsageTextRect.x = 250.0f;
 	a->CpuUsageTextRect.y = 30.0f;
 	a->CpuUsageTextRect.w = (float)surf->w;
 	a->CpuUsageTextRect.h = (float)surf->h;
@@ -478,7 +486,7 @@ bool SDLLoad(struct App* a)
 		fprintf(stderr, "Error rendering text to surface: %s\n", SDL_GetError());
 		return false;
 	}
-	a->LogicalProcessorsTextRect.x = 800.0f;
+	a->LogicalProcessorsTextRect.x = 250.0f;
 	a->LogicalProcessorsTextRect.y = 60.0f;
 	a->LogicalProcessorsTextRect.w = (float)surf->w;
 	a->LogicalProcessorsTextRect.h = (float)surf->h;
@@ -507,6 +515,29 @@ void AppEvents(struct App* a)
 	}
 }
 
+bool UpdateTexture(SDL_Renderer* renderer, TTF_Font* font, SDL_Texture** texture, SDL_FRect* rect, const char* text, SDL_Color colour)
+{
+	SDL_Surface* surf = TTF_RenderText_Blended(font, text, 0, colour);
+	if (!surf) {
+		return false;
+	}
+
+	SDL_Texture* NewTexture = SDL_CreateTextureFromSurface(renderer, surf);
+
+	rect->w = (float)surf->w;
+	rect->h = (float)surf->h;
+
+	SDL_DestroySurface(surf);
+
+	if (NewTexture) {
+		SDL_DestroyTexture(*texture);	// destroy old texture
+		*texture = NewTexture;	// point to new texture
+		return true;
+	}
+
+	return false;
+}
+
 void UpdateValues(struct App* a, struct MemInfo* meminfo, struct DiscInfo* discinfo)
 {
 	// get fresh data
@@ -514,63 +545,27 @@ void UpdateValues(struct App* a, struct MemInfo* meminfo, struct DiscInfo* disci
 		return;
 	}
 
-
-
-
 	GetCpuInfo(&a->sysinfo, a->cpuinfo);
-
 
 	char text_buffer[256];
 	SDL_Surface* surf = NULL;
 
 
 	// mem in use
-	if (a->MemInUseText) {
-		SDL_DestroyTexture(a->MemInUseText);
-	}
-
 	snprintf(text_buffer, sizeof(text_buffer), "RAM in Use: %llu.%02llu GB", meminfo->RemainingGB, meminfo->RemainingMB);
-	surf = TTF_RenderText_Blended(a->text_font, text_buffer, 0, TEXT_COLOUR);
-
-	if (surf) {
-		a->MemInUseTextRect.w = (float)surf->w;
-		a->MemInUseTextRect.h = (float)surf->h;
-		a->MemInUseText = SDL_CreateTextureFromSurface(a->renderer, surf);
-		SDL_DestroySurface(surf);
-	}
+	UpdateTexture(a->renderer, a->text_font, &a->MemInUseText, &a->MemInUseTextRect, text_buffer, TEXT_COLOUR);
 
 
 	// available ram
-	if (a->AvailRamText) {
-		SDL_DestroyTexture(a->AvailRamText);
-	}
-
 	snprintf(text_buffer, sizeof(text_buffer), "Available RAM: %llu.%.2llu GB", meminfo->AvailGBPhys, meminfo->AvailMBPhys);
-	surf = TTF_RenderText_Blended(a->text_font, text_buffer, 0, TEXT_COLOUR);
-
-	if (surf) {
-		a->AvailRamTextRect.w = (float)surf->w;
-		a->AvailRamTextRect.h = (float)surf->h;
-		a->AvailRamText = SDL_CreateTextureFromSurface(a->renderer, surf);
-		SDL_DestroySurface(surf);
-	}
+	UpdateTexture(a->renderer, a->text_font, &a->AvailRamText, &a->AvailRamTextRect, text_buffer, TEXT_COLOUR);
 
 	// percent ram
-	if (a->PercentRamText) {
-		SDL_DestroyTexture(a->PercentRamText);
-	}
-
 	snprintf(text_buffer, sizeof(text_buffer), "%d%% of RAM in use", meminfo->PercentageMemUse);
-	surf = TTF_RenderText_Blended(a->text_font, text_buffer, 0, TEXT_COLOUR);
-
-	if (surf) {
-		a->PercentRamTextRect.w = (float)surf->w;
-		a->PercentRamTextRect.h = (float)surf->h;
-		a->PercentRamText = SDL_CreateTextureFromSurface(a->renderer, surf);
-		SDL_DestroySurface(surf);
-	}
+	UpdateTexture(a->renderer, a->text_font, &a->PercentRamText, &a->PercentRamTextRect, text_buffer, TEXT_COLOUR);
 
 	// disc stuff
+
 
 	// C: drive updating
 	if (DiscSpaceInfo(discinfo, "C:\\"))
@@ -578,50 +573,16 @@ void UpdateValues(struct App* a, struct MemInfo* meminfo, struct DiscInfo* disci
 		discinfo->CPercentageSpaceUse = ((float)discinfo->InUseSpaceGB / discinfo->StoreGB) * 100;
 
 		// total free space
-		if (a->CFreeSpaceText) {
-			SDL_DestroyTexture(a->CFreeSpaceText);
-		}
-
 		snprintf(text_buffer, sizeof(text_buffer), "Total free space: %llu GB", discinfo->TotalFreeBytes.QuadPart);
-		surf = TTF_RenderText_Blended(a->text_font, text_buffer, 0, TEXT_COLOUR);
-
-		if (surf) {
-			a->CFreeSpaceTextRect.w = (float)surf->w;
-			a->CFreeSpaceTextRect.h = (float)surf->h;
-			a->CFreeSpaceText = SDL_CreateTextureFromSurface(a->renderer, surf);
-			SDL_DestroySurface(surf);
-		}
-
+		UpdateTexture(a->renderer, a->text_font, &a->CFreeSpaceText, &a->CFreeSpaceTextRect, text_buffer, TEXT_COLOUR);
+ 
 		// space in use
-		if (a->CSpaceInUseText) {
-			SDL_DestroyTexture(a->CSpaceInUseText);
-		}
-
 		snprintf(text_buffer, sizeof(text_buffer), "Space in use: %llu GB", discinfo->InUseSpaceGB);
-		surf = TTF_RenderText_Blended(a->text_font, text_buffer, 0, TEXT_COLOUR);
-
-		if (surf) {
-			a->CSpaceInUseTextRect.w = (float)surf->w;
-			a->CSpaceInUseTextRect.h = (float)surf->h;
-			a->CSpaceInUseText = SDL_CreateTextureFromSurface(a->renderer, surf);
-			SDL_DestroySurface(surf);
-		}
+		UpdateTexture(a->renderer, a->text_font, &a->CSpaceInUseText, &a->CSpaceInUseTextRect, text_buffer, TEXT_COLOUR);
 
 		// percent use
-		if (a->CPercentSpaceText) {
-			SDL_DestroyTexture(a->CPercentSpaceText);
-		}
-
 		snprintf(text_buffer, sizeof(text_buffer), "%.2f%% of space in use", discinfo->CPercentageSpaceUse);
-		surf = TTF_RenderText_Blended(a->text_font, text_buffer, 0, TEXT_COLOUR);
-
-		if (surf) {
-			a->CPercentSpaceTextRect.w = (float)surf->w;
-			a->CPercentSpaceTextRect.h = (float)surf->h;
-			a->CPercentSpaceText = SDL_CreateTextureFromSurface(a->renderer, surf);
-			SDL_DestroySurface(surf);
-		}
-
+		UpdateTexture(a->renderer, a->text_font, &a->CPercentSpaceText, &a->CPercentSpaceTextRect, text_buffer, TEXT_COLOUR);
 	}
 	else
 	{
@@ -635,49 +596,16 @@ void UpdateValues(struct App* a, struct MemInfo* meminfo, struct DiscInfo* disci
 		discinfo->DPercentageSpaceUse = ((float)discinfo->InUseSpaceGB / discinfo->StoreGB) * 100;
 
 		// total free space
-		if (a->DFreeSpaceText) {
-			SDL_DestroyTexture(a->DFreeSpaceText);
-		}
-
 		snprintf(text_buffer, sizeof(text_buffer), "Total free space: %llu GB", discinfo->TotalFreeBytes.QuadPart);
-		surf = TTF_RenderText_Blended(a->text_font, text_buffer, 0, TEXT_COLOUR);
-
-		if (surf) {
-			a->DFreeSpaceTextRect.w = (float)surf->w;
-			a->DFreeSpaceTextRect.h = (float)surf->h;
-			a->DFreeSpaceText = SDL_CreateTextureFromSurface(a->renderer, surf);
-			SDL_DestroySurface(surf);
-		}
+		UpdateTexture(a->renderer, a->text_font, &a->DFreeSpaceText, &a->DFreeSpaceTextRect, text_buffer, TEXT_COLOUR);
 
 		// space in use
-		if (a->DSpaceInUseText) {
-			SDL_DestroyTexture(a->DSpaceInUseText);
-		}
-
 		snprintf(text_buffer, sizeof(text_buffer), "Space in use: %llu GB", discinfo->InUseSpaceGB);
-		surf = TTF_RenderText_Blended(a->text_font, text_buffer, 0, TEXT_COLOUR);
-
-		if (surf) {
-			a->DSpaceInUseTextRect.w = (float)surf->w;
-			a->DSpaceInUseTextRect.h = (float)surf->h;
-			a->DSpaceInUseText = SDL_CreateTextureFromSurface(a->renderer, surf);
-			SDL_DestroySurface(surf);
-		}
+		UpdateTexture(a->renderer, a->text_font, &a->DSpaceInUseText, &a->DSpaceInUseTextRect, text_buffer, TEXT_COLOUR);
 
 		// percent use
-		if (a->DPercentSpaceText) {
-			SDL_DestroyTexture(a->DPercentSpaceText);
-		}
-
 		snprintf(text_buffer, sizeof(text_buffer), "%.2f%% of space in use", discinfo->DPercentageSpaceUse);
-		surf = TTF_RenderText_Blended(a->text_font, text_buffer, 0, TEXT_COLOUR);
-
-		if (surf) {
-			a->DPercentSpaceTextRect.w = (float)surf->w;
-			a->DPercentSpaceTextRect.h = (float)surf->h;
-			a->DPercentSpaceText = SDL_CreateTextureFromSurface(a->renderer, surf);
-			SDL_DestroySurface(surf);
-		}
+		UpdateTexture(a->renderer, a->text_font, &a->DPercentSpaceText, &a->DPercentSpaceTextRect, text_buffer, TEXT_COLOUR);
 	}
 	else
 	{
@@ -685,20 +613,8 @@ void UpdateValues(struct App* a, struct MemInfo* meminfo, struct DiscInfo* disci
 	}
 
 	// cpu usage %
-	if (a->CpuUsageText) {
-		SDL_DestroyTexture(a->CpuUsageText);
-	}
-
 	snprintf(text_buffer, sizeof(text_buffer), "%.2f%% CPU usage", a->cpuinfo->CpuUsage);
-	surf = TTF_RenderText_Blended(a->text_font, text_buffer, 0, TEXT_COLOUR);
-
-	if (surf) {
-		a->CpuUsageTextRect.w = (float)surf->w;
-		a->CpuUsageTextRect.h = (float)surf->h;
-		a->CpuUsageText = SDL_CreateTextureFromSurface(a->renderer, surf);
-		SDL_DestroySurface(surf);
-	}
-
+	UpdateTexture(a->renderer, a->text_font, &a->CpuUsageText, &a->CpuUsageTextRect, text_buffer, TEXT_COLOUR);
 }
 
 void SDLRun(struct App* a)
@@ -742,29 +658,40 @@ void SDLRun(struct App* a)
 		SDL_RenderTexture(a->renderer, a->MemInUseText, NULL, &a->MemInUseTextRect);
 		SDL_RenderTexture(a->renderer, a->AvailRamText, NULL, &a->AvailRamTextRect);
 		SDL_RenderTexture(a->renderer, a->PercentRamText, NULL, &a->PercentRamTextRect);
-		// disc metrics
-		SDL_RenderTexture(a->renderer, a->CDiscInfoText, NULL, &a->CDiscInfoTextRect);
-		SDL_RenderTexture(a->renderer, a->DDiscInfoText, NULL, &a->DDiscInfoTextRect);
 
-		// C: drive rendering
-		SDL_RenderTexture(a->renderer, a->CTotalSpaceText, NULL, &a->CTotalSpaceTextRect);
-		SDL_RenderTexture(a->renderer, a->CFreeSpaceText, NULL, &a->CFreeSpaceTextRect);
-		SDL_RenderTexture(a->renderer, a->CSpaceInUseText, NULL, &a->CSpaceInUseTextRect);
-		SDL_RenderTexture(a->renderer, a->CPercentSpaceText, NULL, &a->CPercentSpaceTextRect);
-
-		// D: drive rendering
-		SDL_RenderTexture(a->renderer, a->DTotalSpaceText, NULL, &a->DTotalSpaceTextRect);
-		SDL_RenderTexture(a->renderer, a->DFreeSpaceText, NULL, &a->DFreeSpaceTextRect);
-		SDL_RenderTexture(a->renderer, a->DSpaceInUseText, NULL, &a->DSpaceInUseTextRect);
-		SDL_RenderTexture(a->renderer, a->DPercentSpaceText, NULL, &a->DPercentSpaceTextRect);
 
 		// CPu rendering
 		SDL_RenderTexture(a->renderer, a->CpuInfoText, NULL, &a->CpuInfoTextRect);
 		SDL_RenderTexture(a->renderer, a->CpuUsageText, NULL, &a->CpuUsageTextRect);
 		SDL_RenderTexture(a->renderer, a->LogicalProcessorsText, NULL, &a->LogicalProcessorsTextRect);
 
+		// disc metrics
+		if (a->hasCDrive)
+		{
+			SDL_RenderTexture(a->renderer, a->CDiscInfoText, NULL, &a->CDiscInfoTextRect);
+
+			// C: drive rendering
+			SDL_RenderTexture(a->renderer, a->CTotalSpaceText, NULL, &a->CTotalSpaceTextRect);
+			SDL_RenderTexture(a->renderer, a->CFreeSpaceText, NULL, &a->CFreeSpaceTextRect);
+			SDL_RenderTexture(a->renderer, a->CSpaceInUseText, NULL, &a->CSpaceInUseTextRect);
+			SDL_RenderTexture(a->renderer, a->CPercentSpaceText, NULL, &a->CPercentSpaceTextRect);
+		}
+
+		if (a->hasDDrive)
+		{
+			SDL_RenderTexture(a->renderer, a->DDiscInfoText, NULL, &a->DDiscInfoTextRect);
 
 
+			// D: drive rendering
+			SDL_RenderTexture(a->renderer, a->DTotalSpaceText, NULL, &a->DTotalSpaceTextRect);
+			SDL_RenderTexture(a->renderer, a->DFreeSpaceText, NULL, &a->DFreeSpaceTextRect);
+			SDL_RenderTexture(a->renderer, a->DSpaceInUseText, NULL, &a->DSpaceInUseTextRect);
+			SDL_RenderTexture(a->renderer, a->DPercentSpaceText, NULL, &a->DPercentSpaceTextRect);
+
+		}
+
+		// ~60 frames per second
+		SDL_Delay(16);
 	
 		SDL_RenderPresent(a->renderer);
 	}

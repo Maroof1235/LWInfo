@@ -23,17 +23,28 @@ bool GetCpuInfo(struct SYSTEM_INFO* SysInfo, struct CPUTime* CpuTime)
 
 	SYSTEMTIME ConvertedIdleTime, ConvertedKernelTime, ConvertedUserTime;
 
-	GetSystemTimes(&IdleTime, &KernelTime, &UserTime);
+	if (CpuTime->IsFirstRun)
+	{
+		// get times
+		GetSystemTimes(&IdleTime, &KernelTime, &UserTime);
 
-	CpuTime->PrevIdle.LowPart = IdleTime.dwLowDateTime;
-	CpuTime->PrevIdle.HighPart = IdleTime.dwHighDateTime;
+		CpuTime->PrevIdle.LowPart = IdleTime.dwLowDateTime;
+		CpuTime->PrevIdle.HighPart = IdleTime.dwHighDateTime;
 
-	CpuTime->PrevKernel.LowPart = KernelTime.dwLowDateTime;
-	CpuTime->PrevKernel.HighPart = KernelTime.dwHighDateTime;
+		CpuTime->PrevKernel.LowPart = KernelTime.dwLowDateTime;
+		CpuTime->PrevKernel.HighPart = KernelTime.dwHighDateTime;
 
-	CpuTime->PrevUser.LowPart = UserTime.dwLowDateTime;
-	CpuTime->PrevUser.HighPart = UserTime.dwHighDateTime;
+		CpuTime->PrevUser.LowPart = UserTime.dwLowDateTime;
+		CpuTime->PrevUser.HighPart = UserTime.dwHighDateTime;
 
+		CpuTime->IsFirstRun = false;
+
+		CpuTime->CpuUsage = 0.0;
+
+		return false;
+
+	}
+	
 	CpuTime->PrevIdle = CpuTime->Idle;
 	CpuTime->PrevKernel = CpuTime->Kernel;
 	CpuTime->PrevUser = CpuTime->User;

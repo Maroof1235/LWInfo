@@ -10,6 +10,7 @@ struct CPUTime {
 	ULARGE_INTEGER PrevUser;
 
 	double CpuUsage;
+	bool IsFirstRun;
 };
 
 bool GetCpuInfo(struct SYSTEM_INFO* SysInfo, struct CPUTime* CpuTime);

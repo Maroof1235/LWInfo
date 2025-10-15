@@ -68,6 +68,9 @@ struct App {
 
 	SDL_Event event;
 	bool is_running;
+	bool hasCDrive;
+	bool hasDDrive;
+
 };
 
 bool SDLInit(struct App* a);
@@ -77,6 +80,9 @@ void AppFree(struct App** app);
 bool SDLLoad(struct App* a);
 
 void AppEvents(struct App* a);
+
+bool UpdateTexture(SDL_Renderer* renderer, TTF_Font* font, SDL_Texture** texture, SDL_FRect* rect, const char* text, SDL_Color colour);
+
 void UpdateValues(struct App* a, struct MemInfo* meminfo, struct DiscInfo* discinfo);
 
 void SDLRun(struct App* a);
